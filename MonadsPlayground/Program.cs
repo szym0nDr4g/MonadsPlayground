@@ -14,6 +14,11 @@ namespace MonadsPlayground
             return func(identity.Value);
         }
 
+        public static Identity<T3> SelectMany<T1, T2, T3>(this Identity<T1> identity, Func<T1, Identity<T2>> func, Func<T1, T2, T3> select)
+        {
+            return select(identity.Value, func(identity.Value).Value).ToIdentity();
+        }
+
         public static Identity<T> ToIdentity<T>(this T value)
         {
             return new Identity<T>(value);
@@ -31,20 +36,7 @@ namespace MonadsPlayground
 
     class Program
     {
-        void Main()
-        {
-            Func<int, Identity<int>> add2 = x => new Identity<int>(x + 2);
-            Func<int, Identity<int>> mul2 = x => new Identity<int>(x * 2);
-
-            Func<int, Identity<int>> add2mult2 = x => add2(x).Bind(mul2);
-
-            var result = "Hello World!".ToIdentity().Bind(x =>
-                            7.ToIdentity().Bind(y =>
-                                (new DateTime(2013, 1, 11)).ToIdentity().Bind(z =>
-                                (x + y.ToString() + z.ToShortDateString()).ToIdentity())));
-        }
-       
-
+        
       
     }
     }
